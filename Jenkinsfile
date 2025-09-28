@@ -11,21 +11,17 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                echo 'Checking out the latest code from GitHub...'
-                checkout scm
-            }
-        }
+        // The unnecessary 'Checkout Code' stage has been REMOVED.
+        // Jenkins automatically checks out the code before this.
 
         stage('Deploy to S3') {
             when {
-                branch 'main' // or 'master'
+                branch 'main' 
             }
             steps {
                 echo "Deploying website to S3 bucket: ${env.S3_BUCKET_NAME}"
                 
-                // ADD THIS LINE TO SEE WHAT'S IN THE FOLDER
+                // This will show us the files are present in the log
                 sh 'ls -la'
                 
                 withAWS(credentials: env.AWS_CREDENTIALS_ID, region: env.AWS_REGION) {
