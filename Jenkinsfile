@@ -24,8 +24,11 @@ pipeline {
             }
             steps {
                 echo "Deploying website to S3 bucket: ${env.S3_BUCKET_NAME}"
+                
+                // ADD THIS LINE TO SEE WHAT'S IN THE FOLDER
+                sh 'ls -la'
+                
                 withAWS(credentials: env.AWS_CREDENTIALS_ID, region: env.AWS_REGION) {
-                    // Upload all files from the current directory
                     s3Upload(
                         file: '**',
                         bucket: env.S3_BUCKET_NAME,
