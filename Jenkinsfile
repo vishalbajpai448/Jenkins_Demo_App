@@ -11,20 +11,17 @@ pipeline {
     }
 
     stages {
-        // NOTE: The 'when' block has been completely removed from this stage.
+        // NOTE: The 'when' block has been removed to ensure deployment.
         stage('Deploy to S3') {
             steps {
                 echo "Deploying website to S3 bucket: ${env.S3_BUCKET_NAME}"
                 
-                // This will show us the files are present
                 sh 'ls -la'
                 
+                // This block still securely provides our AWS keys
                 withAWS(credentials: env.AWS_CREDENTIALS_ID, region: env.AWS_REGION) {
-                    s3Upload(
-                        file: '**',
-                        bucket: env.S3_BUCKET_NAME,
-                        path: '/'
-                    )
+                    // **THE FIX:** Replace s3Upload with a more reliable aws s3 sync command
+                    sh "aws s3 sync . s3://${S3_BUCKET_NAME} --delete"
                 }
             }
         }
